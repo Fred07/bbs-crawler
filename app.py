@@ -19,23 +19,20 @@ class pttClient:
 	def login(self):
 		host = self.host
 		self.tn = telnetlib.Telnet(self.host)
-		self.tn.set_debuglevel(2)
+		# self.tn.set_debuglevel(2)
 		print u"connect to %s" % host
 		content = self.tn.expect([u'或以 new 註冊:'.encode('big5')], 3)
 		if (content[0] != -1):
 			account = raw_input("請輸入帳號: ")
 			self.tn.write(account+'\r\n')
-			print u"---step1---"
 			content = self.tn.expect([u'請輸入您的密碼:'.encode('big5')], 3)
 			if (content[0] != -1):
 				pwd = raw_input("請輸入密碼: ")
 				self.tn.write(pwd+'\r\n')
-				print u"---step2---"
 				content = self.tn.expect([u'您想刪除其他重複登入的連線嗎'.encode('big5')], 3)
 				if (content[0] != -1):
 					removePrevConnect = raw_input("移除重複的連線? ")
 					self.tn.write(removePrevConnect+'\r\n')
-					print u"---step3---"
 					# self.tn.write("\u001b[B")
 
 				else:
@@ -48,21 +45,38 @@ class pttClient:
 
 		return True
 
-	def getBoard(self):
-		time.sleep(6)
-		# self.tn.write("\u001b[B\r\n".encode('ascii', 'ignore'))
-		# self.tn.write("[B".encode('ascii', 'ignore'))
-		command = raw_input("do something!")
-		self.tn.write(command + '\r\n')
-		# self.tn.write("s\r\n")
+	def getBoard(self, name):
+		time.sleep(5)
+
+		#按一下鍵盤'下'跳過進站畫面
+		# self.tn.write("\u001b[B".encode('ascii', 'ignore'))
+		self.tn.write("[B".encode('ascii', 'ignore'))
+		print("進入ptt了")
+
+		self.tn.write("s".encode('ascii', 'ignore'))
 		content = self.tn.expect([u'請輸入看板名稱'.encode('big5')], 3)
 		if (content[0] != -1):
-			print "yes!!!!"
+			self.tn.write(name + '\r\n')
+			print("進入" + name + "看板")
+			# self.tn.write("\u001b[B".encode('ascii', 'ignore'))
+			self.tn.write("[B".encode('ascii', 'ignore'))
+			return True;
 		else:
-			print "no!!!!"
-		# sleep(2)
-		# tn.write("")
+			return False
+
+	def control(self):
+		self.tn.write('^L'.encode('ascii', 'ignore'))
+		command = raw_input("下指令吧!!")
+		if (not command):
+			command = '\r\n'
+		self.tn.write(command)
+		content = self.tn.read_very_eager()
+		print content
 
 pttClient = pttClient()
 pttClient.login()
-pttClient.getBoard()
+if (pttClient.getBoard("Gossiping")):
+	while (True):
+		pttClient.control()
+else:
+	print "進入看板失敗"
