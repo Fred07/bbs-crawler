@@ -8,18 +8,30 @@ import time
 import telnetlib
 
 class pttClient:
-	host = "ptt.cc"
+	host = None
 	tn = None
 	titleList = None
+	errorMsg = None
 
 	def __init__(self):
 		pass
 
-	def login(self):
-		host = self.host
+	def connect(self, host = "ptt.cc"):
+		self.host = host
 		self.tn = telnetlib.Telnet(self.host)
 		# self.tn.set_debuglevel(2)
-		print u"connect to %s" % host
+
+		# Todo: 處理連線失敗的exception
+		if (self.tn):
+			# print u"連線至 %s" % host
+			self.setErrorMsg(u"連線至 %s" % host)
+			return True
+		else:
+			# print u"連線失敗"
+			self.setErrorMsg(u"連線失敗")
+			return False
+
+	def login(self):
 		content = self.tn.expect([u'或以 new 註冊:'.encode('big5')], 2)
 		if (content[0] != -1):
 			account = raw_input("請輸入帳號: ")
@@ -44,11 +56,6 @@ class pttClient:
 				if (content[0] != -1):
 					removeWrongAccess = raw_input("刪除錯誤嘗試紀錄? ")
 					self.send(removeWrongAccess, True)
-
-			else:
-				print "step2 failed"
-		else:
-			print "step1 failed"
 
 		return True
 
@@ -136,3 +143,9 @@ class pttClient:
 
 	def delay(self, delaySeconds):
 		time.sleep(delaySeconds)
+
+	def setErrorMsg(self, errorMsg):
+		self.errorMsg = errorMsg
+
+	def getErrorMsg(self):
+		return self.errorMsg

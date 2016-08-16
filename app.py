@@ -4,6 +4,7 @@
 import pttClient
 
 pttClient = pttClient.pttClient()
+connect = pttClient.connect("ptt.cc")
 pttClient.login()
 if (pttClient.getBoard("Gossiping")):
 	while (True):
