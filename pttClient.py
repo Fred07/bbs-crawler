@@ -17,19 +17,30 @@ class pttClient:
 		pass
 
 	def connect(self, host = "ptt.cc"):
-		self.host = host
-		self.tn = telnetlib.Telnet(self.host)
-		# self.tn.set_debuglevel(2)
+		try:
+			self.host = host
+			self.tn = telnetlib.Telnet(self.host)
+			# self.tn.set_debuglevel(2)
 
-		# Todo: 處理連線失敗的exception
-		if (self.tn):
-			# print u"連線至 %s" % host
-			self.setErrorMsg(u"連線至 %s" % host)
-			return True
-		else:
-			# print u"連線失敗"
-			self.setErrorMsg(u"連線失敗")
+			# Todo: 處理連線失敗的exception
+			if (self.tn):
+				self.setErrorMsg(u"已連線至 %s" % host)
+				return True
+			else:
+				self.setErrorMsg(u"連線失敗，無法連線至 %s" % host)
+				return False
+		except Exception:
+			self.setErrorMsg(u"連線失敗，無法連線至 %s" % host)
 			return False
+
+	def reConnect(self):
+		print(u"重新連線中....")
+		if (not self.host):
+			self.setErrorMsg(u"連線失敗，無法連線至 %s" % self.host)
+			return False
+
+		if (not self.connect(self.host)):
+			self.setErrorMsg(u"連線失敗，無法重新連線至 %s" % self.host)
 
 	def login(self):
 		content = self.tn.expect([u'或以 new 註冊:'.encode('big5')], 2)
