@@ -6,6 +6,7 @@ import sys
 import getpass
 import time
 import telnetlib
+import keyAction as key
 
 class pttClient:
 	host = None
@@ -60,7 +61,7 @@ class pttClient:
 				self.delay(1.5)
 
 				#鍵盤'key down', 跳過進站畫面
-				self.send(u"\u001b[B", False)
+				self.send(key.keyDown(), False)
 				print("進入ptt了")
 
 				content = self.tn.expect([u'您要刪除以上錯誤嘗試的記錄嗎?'.encode('big5')], 2)
@@ -81,7 +82,7 @@ class pttClient:
 			print("進入" + name + "看板")
 
 			# 跳過進版畫面
-			self.send(u"\u001b[B", False)
+			self.send(key.keyDown(), False)
 
 			# read, (清空buffer)
 			self.tn.read_very_eager()
@@ -97,13 +98,13 @@ class pttClient:
 		if (not command):
 			command = u'\u000d'.encode('ascii', 'ignore')
 		if (command == 'left'):
-			command = u'\u001b[D'.encode('ascii', 'ignore')
+			command = key.keyLeft()
 		if (command == 'right'):
-			command = u'\u001b[C'.encode('ascii', 'ignore')
+			command = key.keyRight()
 		if (command == 'up'):
-			command = u'\u001b[A'.encode('ascii', 'ignore')
+			command = key.keyUp()
 		if (command == 'down'):
-			command = u'\u001b[B'.encode('ascii', 'ignore')
+			command = key.keyDown()
 		self.send(command, False)
 
 		# show
@@ -118,7 +119,6 @@ class pttClient:
 		content = self.tn.read_very_eager().decode('big5', 'ignore')
 
 		keyWord = keyWord.decode('utf-8', 'ignore')
-		# keyWordList = re.finditer(keyWord, content)
 		keyWordList = re.findall(keyWord, content)
 		for m in keyWordList:
 			print "出現: " , keyWord
@@ -134,10 +134,12 @@ class pttClient:
 	# 左轉, 右轉, End (目的為更新文章, 不適用search方式進入看板列表的情況)(該情況左轉會回到首頁控制板)
 	def reload(self):
 		# <--
-		self.send(u'\u001b[D', False, 1)
+		# self.send(u'\u001b[D', False, 1)
+		self.send(key.keyLeft(), False, 1)
 
 		# -->
-		self.send(u'\u001b[C', False, 1)
+		# self.send(u'\u001b[C', False, 1)
+		self.send(key.keyRight(), False, 1)
 
 		# End
 		self.send(u'\u001b[F', False, 1)
