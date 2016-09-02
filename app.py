@@ -19,12 +19,12 @@ pttHandler.login()
 if (pttHandler.getBoard("Gossiping")):
 	while (True):
 		# pttHandler.control()
+		pttHandler.getBoard("Gossiping")
 		searchWord = '地震'
 		keyWordCount = pttHandler.detectWording(searchWord)
-
 		if (keyWordCount > 10):
 			print "警告!!!", searchWord, "出現超過", keyWordCount, "次!!"
-		pttHandler.getBoard("Gossiping")
+
 		print '冷卻開始...'
 		pttHandler.delay(delayTime)
 		print '冷卻結束'
