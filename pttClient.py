@@ -129,7 +129,8 @@ class pttClient:
 
 	# Ctrl + l (重送畫面)
 	def refresh(self):
-		self.send(u'\u000c', False, 0.5)
+		# self.send(u'\u000c', False, 0.5)
+		self.send(key.keyRefresh(), False, 0.5)
 
 	# 左轉, 右轉, End (目的為更新文章, 不適用search方式進入看板列表的情況)(該情況左轉會回到首頁控制板)
 	def reload(self):
