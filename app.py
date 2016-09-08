@@ -2,22 +2,23 @@
 # -*- coding: utf-8 -*- 
 
 import pttClient
+import socket
 
-delayTime = 30;
-pttHandler = pttClient.pttClient()
+if __name__ == '__main__':
+	delayTime = 30;
+	pttHandler = pttClient.pttClient()
 
-if (not pttHandler.connect("ptt.cc")):
-	print pttHandler.getErrorMsg()
-	exit()
+	if (not pttHandler.connect("ptt.cc")):
+		print pttHandler.getErrorMsg()
+		exit()
 
-#### Test reConnect function
-# if (not pttHandler.reConnect()):
-# 	print pttHandler.getErrorMsg()
-# 	exit()
+	#### Test reConnect function
+	# if (not pttHandler.reConnect()):
+	# 	print pttHandler.getErrorMsg()
+	# 	exit()
 
-pttHandler.login()
-if (pttHandler.getBoard("Gossiping")):
-	while (True):
+	pttHandler.login()
+	while (pttHandler.isLogin()):
 		# pttHandler.control()
 		pttHandler.getBoard("Gossiping")
 		searchWord = '地震'
@@ -28,5 +29,3 @@ if (pttHandler.getBoard("Gossiping")):
 		print '冷卻開始...'
 		pttHandler.delay(delayTime)
 		print '冷卻結束'
-else:
-	print "進入看板失敗"
