@@ -28,3 +28,10 @@ def keyRight(ascii = True):
 		key = key.encode('ascii', 'ignore')
 
 	return key
+
+def keyRefresh(ascii = True):
+	key = u'\u000c'
+	if (ascii):
+		key = key.encode('ascii', 'ignore')
+
+	return key
