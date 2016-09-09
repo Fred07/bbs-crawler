@@ -127,8 +127,8 @@ class pttClient:
 
 		keyWord = keyWord.decode('utf-8', 'ignore')
 		keyWordList = re.findall(keyWord, content)
-		for m in keyWordList:
-			print "出現: " , keyWord
+		# for m in keyWordList:
+		# 	print "出現: " , keyWord
 
 		print keyWord, "出現了", len(keyWordList), "次"
 
