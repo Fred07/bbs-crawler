@@ -4,20 +4,26 @@
 import pttClient
 import socket
 import sys
+import os
+import yaml
 
 if __name__ == '__main__':
-	delayTime = 30;
-	searchWord = '地震'
+
+	with open(os.path.dirname(__file__) + 'config/config.yaml', 'r') as f:
+		config = yaml.load(f)
+
+		# Get parameters
+		host       = config['host_config']['host']
+		account    = config['host_config']['account']
+		password   = config['host_config']['password']
+		delayTime  = config['crawler_config']['cool_down_time']
+		searchWord = '地震'
+
 	pttHandler = pttClient.pttClient()
 
 	if (not pttHandler.connect("ptt.cc")):
 		print pttHandler.getErrorMsg()
 		exit()
-
-	#### Test reConnect function
-	# if (not pttHandler.reConnect()):
-	# 	print pttHandler.getErrorMsg()
-	# 	exit()
 
 	if (len(sys.argv) > 1 and sys.argv[1]):
 		searchWord = sys.argv[1]
@@ -33,10 +39,3 @@ if __name__ == '__main__':
 			print '冷卻開始...'
 			pttHandler.delay(delayTime)
 			print '冷卻結束'
-	# except BaseException:
-	# 	print 'Base Exception!!'
-	# 	print 
-	# 	exit()
-	# except Exception:
-	# 	print 'Exception!!'
-	# 	exit()
