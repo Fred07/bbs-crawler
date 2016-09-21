@@ -1,3 +1,6 @@
+develop_config:
+  login_mode: {config}{manuel}
+
 host_config:
   host: {host}
   account: {account}
@@ -5,3 +8,4 @@ host_config:
 
 crawler_config:
   cool_down_time: 30
+  remove_prev_connect: false

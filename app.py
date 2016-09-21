@@ -12,14 +12,16 @@ if __name__ == '__main__':
 	with open(os.path.dirname(__file__) + 'config/config.yaml', 'r') as f:
 		config = yaml.load(f)
 
-		# Get parameters
+		# Get parameters from config.yaml
 		host       = config['host_config']['host']
 		account    = config['host_config']['account']
 		password   = config['host_config']['password']
 		delayTime  = config['crawler_config']['cool_down_time']
+		removeCon  = config['crawler_config']['remove_prev_connect']
+		mode       = config['develop_config']['login_mode']
 		searchWord = '地震'
 
-	pttHandler = pttClient.pttClient()
+	pttHandler = pttClient.pttClient(host, account, password, removeCon, mode)
 
 	if (not pttHandler.connect("ptt.cc")):
 		print pttHandler.getErrorMsg()
