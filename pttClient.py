@@ -13,22 +13,25 @@ class pttClient:
 	account = None
 	password = None
 	removePrevConnect = False
-	mode = 'config'
+	mode = None
 	tn = None
 	titleList = None
 	errorMsg = None
 	isConnect = False
 
-	def __init__(self, host, account, pwd, removePrevConnect, mode):
+	def __init__(self, host = None, account = None, pwd = None, removePrevConnect = True, mode = 'manuel'):
 		self.host = host
 		self.account = account
 		self.password = pwd
-		self.removePrevConnect = removePrevConnect
+		if (removePrevConnect):
+			self.removePrevConnect = 'y'
+		else:
+			self.removePrevConnect = 'n'
 
 		if (mode == 'config'):
-			mode = 'config'
+			self.mode = 'config'
 		else:
-			mode = 'manuel'
+			self.mode = 'manuel'
 
 	def isLogin(self):
 		return self.isConnect
@@ -39,7 +42,7 @@ class pttClient:
 
 		return False
 
-	def connect(self, host = "ptt.cc"):
+	def connect(self, host):
 		try:
 			self.host = host
 			self.tn = telnetlib.Telnet(self.host)

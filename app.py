@@ -21,7 +21,11 @@ if __name__ == '__main__':
 		mode       = config['develop_config']['login_mode']
 		searchWord = '地震'
 
+	# config mode, require parameters
 	pttHandler = pttClient.pttClient(host, account, password, removeCon, mode)
+
+	# manuel mode, prompt for the basic info
+	# pttHandler = pttClient.pttClient()
 
 	if (not pttHandler.connect("ptt.cc")):
 		print pttHandler.getErrorMsg()
@@ -38,6 +42,6 @@ if __name__ == '__main__':
 			if (keyWordCount > 10):
 				print "警告!!!", searchWord, "出現超過", keyWordCount, "次!!"
 
-			print '冷卻開始...'
+			print('冷卻開始...%d秒' % delayTime)
 			pttHandler.delay(delayTime)
 			print '冷卻結束'
