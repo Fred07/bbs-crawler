@@ -3,29 +3,50 @@
 
 import pttClient
 import socket
+import sys
+import os
+import yaml
 
 if __name__ == '__main__':
-	delayTime = 30;
-	pttHandler = pttClient.pttClient()
+
+	with open(os.path.dirname(__file__) + 'config/config.yaml', 'r') as f:
+		config = yaml.load(f)
+
+		# Get parameters from config.yaml
+		host       = config['host_config']['host']
+		account    = config['host_config']['account']
+		password   = config['host_config']['password']
+		delayTime  = config['crawler_config']['cool_down_time']
+		removeCon  = config['crawler_config']['remove_prev_connect']
+		searchWord = config['crawler_config']['search_word']
+		mode       = config['develop_config']['login_mode']
+
+	# 2 mode to choice #
+	# config mode, require parameters
+	pttHandler = pttClient.pttClient(host = host,
+									 account = account,
+									 pwd = password,
+									 removePrevConnect = removeCon,
+									 mode = mode)
+
+	# manuel mode, prompt for the basic info
+	# pttHandler = pttClient.pttClient()
 
 	if (not pttHandler.connect("ptt.cc")):
 		print pttHandler.getErrorMsg()
 		exit()
 
-	#### Test reConnect function
-	# if (not pttHandler.reConnect()):
-	# 	print pttHandler.getErrorMsg()
-	# 	exit()
+	if (len(sys.argv) > 1 and sys.argv[1]):
+		searchWord = sys.argv[1]
 
 	pttHandler.login()
 	while (pttHandler.isLogin()):
-		# pttHandler.control()
-		pttHandler.getBoard("Gossiping")
-		searchWord = '地震'
-		keyWordCount = pttHandler.detectWording(searchWord)
-		if (keyWordCount > 10):
-			print "警告!!!", searchWord, "出現超過", keyWordCount, "次!!"
+			# pttHandler.control()
+			pttHandler.getBoard("Gossiping")
+			keyWordCount = pttHandler.detectWording(searchWord)
+			if (keyWordCount > 10):
+				print "警告!!!", searchWord, "出現超過", keyWordCount, "次!!"
 
-		print '冷卻開始...'
-		pttHandler.delay(delayTime)
-		print '冷卻結束'
+			print('冷卻開始...%d秒' % delayTime)
+			pttHandler.delay(delayTime)
+			print '冷卻結束'

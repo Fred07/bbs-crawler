@@ -10,18 +10,39 @@ import keyAction as key
 
 class pttClient:
 	host = None
+	account = None
+	password = None
+	removePrevConnect = False
+	mode = None
 	tn = None
 	titleList = None
 	errorMsg = None
 	isConnect = False
 
-	def __init__(self):
-		pass
+	def __init__(self, host = None, account = None, pwd = None, removePrevConnect = True, mode = 'manuel'):
+		self.host = host
+		self.account = account
+		self.password = pwd
+		if (removePrevConnect):
+			self.removePrevConnect = 'y'
+		else:
+			self.removePrevConnect = 'n'
+
+		if (mode == 'config'):
+			self.mode = 'config'
+		else:
+			self.mode = 'manuel'
 
 	def isLogin(self):
 		return self.isConnect
 
-	def connect(self, host = "ptt.cc"):
+	def isConfigMode(self):
+		if (self.mode == 'config'):
+			return True
+
+		return False
+
+	def connect(self, host):
 		try:
 			self.host = host
 			self.tn = telnetlib.Telnet(self.host)
@@ -51,17 +72,30 @@ class pttClient:
 			self.setErrorMsg(u"連線失敗，無法重新連線至 %s" % self.host)
 
 	def login(self):
+		print("開始進行登入...")
 		content = self.tn.expect([u'或以 new 註冊:'.encode('big5')], 2)
 		if (content[0] != -1):
-			account = raw_input("請輸入帳號: ")
+			if (self.isConfigMode()):
+				print("從config讀取登入資訊...")
+				account = self.account
+			else:
+				account = raw_input("請輸入帳號: ")
+
 			self.send(account, True)
 			content = self.tn.expect([u'請輸入您的密碼:'.encode('big5')], 2)
 			if (content[0] != -1):
-				pwd = getpass.getpass("請輸入密碼: ")
+				if (self.isConfigMode()):
+					pwd = self.password
+				else:
+					pwd = getpass.getpass("請輸入密碼: ")
+
 				self.send(pwd, True)
 				content = self.tn.expect([u'您想刪除其他重複登入的連線嗎'.encode('big5')], 2)
 				if (content[0] != -1):
-					removePrevConnect = raw_input("移除重複的連線? ")
+					if (self.isConfigMode()):
+						removePrevConnect = self.removePrevConnect
+					else:
+						removePrevConnect = raw_input("移除重複的連線? ")
 					self.send(removePrevConnect, True)
 
 				#等候進站畫面
@@ -73,7 +107,10 @@ class pttClient:
 
 				content = self.tn.expect([u'您要刪除以上錯誤嘗試的記錄嗎?'.encode('big5')], 2)
 				if (content[0] != -1):
-					removeWrongAccess = raw_input("刪除錯誤嘗試紀錄? ")
+					if (self.isConfigMode()):
+						removeWrongAccess = 'y'
+					else:
+						removeWrongAccess = raw_input("刪除錯誤嘗試紀錄? ")
 					self.send(removeWrongAccess, True)
 
 		return True
@@ -125,10 +162,9 @@ class pttClient:
 		self.refresh()
 		content = self.tn.read_very_eager().decode('big5', 'ignore')
 
-		keyWord = keyWord.decode('utf-8', 'ignore')
 		keyWordList = re.findall(keyWord, content)
-		for m in keyWordList:
-			print "出現: " , keyWord
+		# for m in keyWordList:
+		# 	print "出現: " , keyWord
 
 		print keyWord, "出現了", len(keyWordList), "次"
 
