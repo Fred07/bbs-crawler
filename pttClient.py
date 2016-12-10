@@ -162,7 +162,6 @@ class pttClient:
 		self.refresh()
 		content = self.tn.read_very_eager().decode('big5', 'ignore')
 
-		keyWord = keyWord.decode('utf-8', 'ignore')
 		keyWordList = re.findall(keyWord, content)
 		# for m in keyWordList:
 		# 	print "出現: " , keyWord

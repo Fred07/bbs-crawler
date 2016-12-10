@@ -9,3 +9,4 @@ host_config:
 crawler_config:
   cool_down_time: 30
   remove_prev_connect: false
+  search_word: {searchWord}

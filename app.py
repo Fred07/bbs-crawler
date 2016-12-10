@@ -18,11 +18,16 @@ if __name__ == '__main__':
 		password   = config['host_config']['password']
 		delayTime  = config['crawler_config']['cool_down_time']
 		removeCon  = config['crawler_config']['remove_prev_connect']
+		searchWord = config['crawler_config']['search_word']
 		mode       = config['develop_config']['login_mode']
-		searchWord = '地震'
 
+	# 2 mode to choice #
 	# config mode, require parameters
-	pttHandler = pttClient.pttClient(host, account, password, removeCon, mode)
+	pttHandler = pttClient.pttClient(host = host,
+									 account = account,
+									 pwd = password,
+									 removePrevConnect = removeCon,
+									 mode = mode)
 
 	# manuel mode, prompt for the basic info
 	# pttHandler = pttClient.pttClient()
