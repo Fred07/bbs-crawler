@@ -21,21 +21,17 @@ if __name__ == '__main__':
 		searchWord = config['crawler_config']['search_word']
 		mode       = config['develop_config']['login_mode']
 
-	# 2 mode to choice #
-	# config mode, require parameters
 	pttHandler = pttClient.pttClient(host = host,
 									 account = account,
 									 pwd = password,
 									 removePrevConnect = removeCon,
 									 mode = mode)
 
-	# manuel mode, prompt for the basic info
-	# pttHandler = pttClient.pttClient()
-
 	if (not pttHandler.connect("ptt.cc")):
 		print pttHandler.getErrorMsg()
 		exit()
 
+	# Get search word from input
 	if (len(sys.argv) > 1 and sys.argv[1]):
 		searchWord = sys.argv[1]
 
@@ -44,9 +40,9 @@ if __name__ == '__main__':
 			# pttHandler.control()
 			pttHandler.getBoard("Gossiping")
 			keyWordCount = pttHandler.detectWording(searchWord)
-			if (keyWordCount > 10):
-				print "警告!!!", searchWord, "出現超過", keyWordCount, "次!!"
+			if (keyWordCount >= 0):
+				print('警告!!!{:s}出現超過{:s}次!!'.format(searchWord, keyWordCount))
 
 			print('冷卻開始...%d秒' % delayTime)
 			pttHandler.delay(delayTime)
-			print '冷卻結束'
+			print('冷卻結束')
