@@ -79,7 +79,7 @@ class pttClient:
 				print("從config讀取登入資訊...")
 				account = self.account
 			else:
-				account = raw_input("請輸入帳號: ")
+				account = input("請輸入帳號: ")
 
 			self.send(account, True)
 			content = self.tn.expect([u'請輸入您的密碼:'.encode('big5')], 2)
@@ -95,7 +95,7 @@ class pttClient:
 					if (self.isConfigMode()):
 						removePrevConnect = self.removePrevConnect
 					else:
-						removePrevConnect = raw_input("移除重複的連線? ")
+						removePrevConnect = input("移除重複的連線? ")
 					self.send(removePrevConnect, True)
 
 				#等候進站畫面
@@ -110,7 +110,7 @@ class pttClient:
 					if (self.isConfigMode()):
 						removeWrongAccess = 'y'
 					else:
-						removeWrongAccess = raw_input("刪除錯誤嘗試紀錄? ")
+						removeWrongAccess = input("刪除錯誤嘗試紀錄? ")
 					self.send(removeWrongAccess, True)
 
 		return True
@@ -136,7 +136,7 @@ class pttClient:
 
 	def control(self):
 		self.refresh()
-		command = raw_input("下指令吧!!")
+		command = input("下指令吧!!")
 
 		#特殊指令up,down,left,right
 		if (not command):
@@ -156,7 +156,7 @@ class pttClient:
 
 	def showScreen(self):
 		content = self.tn.read_very_eager()
-		print content.decode('big5', 'ignore')
+		print(content.decode('big5', 'ignore'))
 
 	def detectWording(self, keyWord):
 		self.refresh()
@@ -166,7 +166,7 @@ class pttClient:
 		# for m in keyWordList:
 		# 	print "出現: " , keyWord
 
-		print keyWord, "出現了", len(keyWordList), "次"
+		print("{:s}出現了{:d}次".format(keyWord, len(keyWordList)))
 
 		return len(keyWordList)
 
@@ -192,7 +192,7 @@ class pttClient:
 	# send command
 	def send(self, command, crlf = True, delayTime = 0.5):
 		if (crlf):
-			self.tn.write(command.encode('ascii', 'ignore') + '\r\n')
+			self.tn.write(command.encode('ascii', 'ignore') + b'\r\n')
 		else:
 			self.tn.write(command.encode('ascii', 'ignore'))
 		

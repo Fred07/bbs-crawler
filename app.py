@@ -28,7 +28,7 @@ if __name__ == '__main__':
 									 mode = mode)
 
 	if (not pttHandler.connect("ptt.cc")):
-		print pttHandler.getErrorMsg()
+		print(pttHandler.getErrorMsg())
 		exit()
 
 	# Get search word from input
@@ -41,7 +41,7 @@ if __name__ == '__main__':
 			pttHandler.getBoard("Gossiping")
 			keyWordCount = pttHandler.detectWording(searchWord)
 			if (keyWordCount >= 0):
-				print('警告!!!{:s}出現超過{:s}次!!'.format(searchWord, keyWordCount))
+				print('警告!!!{:s}出現超過{:d}次!!'.format(searchWord, keyWordCount))
 
 			print('冷卻開始...%d秒' % delayTime)
 			pttHandler.delay(delayTime)
