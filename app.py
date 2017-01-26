@@ -40,7 +40,7 @@ if __name__ == '__main__':
 			# pttHandler.control()
 			pttHandler.getBoard("Gossiping")
 			keyWordCount = pttHandler.detectWording(searchWord)
-			if (keyWordCount >= 0):
+			if (keyWordCount >= 10):
 				print('警告!!!{:s}出現超過{:d}次!!'.format(searchWord, keyWordCount))
 
 			print('冷卻開始...%d秒' % delayTime)
