@@ -115,7 +115,8 @@ class pttClient:
 
 		return True
 
-	def getBoard(self, name):
+	def gotoBoard(self, name):
+
 		# 's', 搜尋看板名稱
 		self.send("s", False)
 		content = self.tn.expect([u'請輸入看板名稱'.encode('big5')], 3)
@@ -161,11 +162,7 @@ class pttClient:
 	def detectWording(self, keyWord):
 		self.refresh()
 		content = self.tn.read_very_eager().decode('big5', 'ignore')
-
 		keyWordList = re.findall(keyWord, content)
-		# for m in keyWordList:
-		# 	print "出現: " , keyWord
-
 		print("{:s}出現了{:d}次".format(keyWord, len(keyWordList)))
 
 		return len(keyWordList)

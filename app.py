@@ -19,7 +19,9 @@ if __name__ == '__main__':
 		delayTime  = config['crawler_config']['cool_down_time']
 		removeCon  = config['crawler_config']['remove_prev_connect']
 		searchWord = config['crawler_config']['search_word']
+		board      = config['crawler_config']['board_list']
 		mode       = config['develop_config']['login_mode']
+
 
 	pttHandler = pttClient.pttClient(host = host,
 									 account = account,
@@ -35,10 +37,11 @@ if __name__ == '__main__':
 	if (len(sys.argv) > 1 and sys.argv[1]):
 		searchWord = sys.argv[1]
 
+
 	pttHandler.login()
 	while (pttHandler.isLogin()):
 			# pttHandler.control()
-			pttHandler.getBoard("Gossiping")
+			pttHandler.gotoBoard(board)
 			keyWordCount = pttHandler.detectWording(searchWord)
 			if (keyWordCount >= 10):
 				print('警告!!!{:s}出現超過{:d}次!!'.format(searchWord, keyWordCount))
