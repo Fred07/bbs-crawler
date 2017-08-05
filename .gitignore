@@ -2,3 +2,4 @@ untitled.sublime-workspace
 sftp-config.json
 *.pyc
 */config.yaml
+.idea/*
