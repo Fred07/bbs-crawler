@@ -55,11 +55,11 @@ class PttClient:
                 return True
             else:
                 self.set_error_msg(u"連線失敗，無法連線至 %s" % host)
-                self.isConnect = False;
-                return False
-        except Exception:
+                self.isConnect = False
+                raise IOError
+        except IOError:
             self.set_error_msg(u"連線失敗，無法連線至 %s" % host)
-            self.isConnect = False;
+            self.isConnect = False
             return False
 
     def reconnect(self):
@@ -131,7 +131,7 @@ class PttClient:
 
             # read, (清空buffer)
             self.tn.read_very_eager()
-            return True;
+            return True
         else:
             return False
 
@@ -159,11 +159,11 @@ class PttClient:
         content = self.tn.read_very_eager()
         print(content.decode('big5', 'ignore'))
 
-    def detect_wording(self, keyWord):
+    def detect_wording(self, key_word):
         self.refresh()
         content = self.tn.read_very_eager().decode('big5', 'ignore')
-        key_word_list = re.findall(keyWord, content)
-        print("{:s}出現了{:d}次".format(keyWord, len(key_word_list)))
+        key_word_list = re.findall(key_word, content)
+        print("{:s}出現了{:d}次".format(key_word, len(key_word_list)))
 
         return len(key_word_list)
 
